@@ -3,11 +3,11 @@ import {View, Text} from 'react-native'
 import UneAction from './UneAction'
 
 
-const ListeActions = () => {
+const ListeActions = ({actions, supprimerFonction}) => {
 
     return (
         <View>
-            <Text>Ici prochainement une liste d'actions</Text>
+            { actions.map(titreAction => <UneAction titre={titreAction} supprimerAction={supprimerFonction} />) }
         </View>
     )
 }

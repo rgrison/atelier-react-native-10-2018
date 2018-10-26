@@ -14,7 +14,8 @@ export default class App extends React.Component {
     // état global de l'application
     // il y aura probalement d'autres informations à stocker
     state = {
-        texteSaisie: ''
+        texteSaisie: '',
+        actions: []
     }
 
     /**
@@ -23,25 +24,34 @@ export default class App extends React.Component {
      * @param nouvelleSaisie la valeur saisie
      */
     quandLaSaisieChange(nouvelleSaisie) {
-        console.log('la saisie à changée', nouvelleSaisie)
+        this.setState({ texteSaisie: nouvelleSaisie });
     }
 
     /**
      * Méthode invoquée lors du clic sur le bouton `Valider`.
      */
     validerNouvelleAction() {
-        console.log('Vous avez cliqué sur Valider !')
+        console.log('Vous avez cliqué sur Valider !');
+        
+        let nouvellesActions = this.state.actions;
+        nouvellesActions.push(this.state.texteSaisie);
+        this.setState({actions: nouvellesActions, texteSaisie: ""});
     }
 
+    supprimerAction = (titre) => {
+        console.log(`suppression de l'action '${titre}'`);
+        let actions = this.state.actions.filter(titreAction => titreAction != titre);
+        this.setState({actions: actions});
+    }
+    
     render() {
-        const {texteSaisie} = this.state
 
         return (
             <View style={styles.conteneur}>
                 <ScrollView keyboardShouldPersistTaps='always' style={styles.content}>
-                    <Entete/>
-                    <Saisie texteSaisie={texteSaisie} evtTexteModifie={(titre) => this.quandLaSaisieChange(titre)}/>
-                    <ListeActions />
+                    <Entete />
+                    <Saisie texteSaisie={this.state.texteSaisie} evtTexteModifie={(titre) => this.quandLaSaisieChange(titre)}/>
+                    <ListeActions actions={this.state.actions} supprimerFonction={this.supprimerAction}/>
                     <BoutonCreer onValider={() => this.validerNouvelleAction()}/>
                 </ScrollView>
                 <Menu/>
