@@ -33,15 +33,22 @@ export default class App extends React.Component {
     validerNouvelleAction() {
         console.log('Vous avez cliqué sur Valider !');
         
-        let nouvellesActions = this.state.actions;
-        nouvellesActions.push(this.state.texteSaisie);
-        this.setState({actions: nouvellesActions, texteSaisie: ""});
+        let actions = this.state.actions;
+        actions.push({titre: this.state.texteSaisie, done: false});
+        this.setState({actions: actions, texteSaisie: ""});
     }
 
     supprimerAction = (titre) => {
         console.log(`suppression de l'action '${titre}'`);
-        let actions = this.state.actions.filter(titreAction => titreAction != titre);
+        let actions = this.state.actions.filter(action => action.titre != titre);
         this.setState({actions: actions});
+    }
+
+    majEtatAction = (action) => {
+        action.done = !action.done;
+        let actions = this.state.actions.filter(action => action.titre != action.titre);
+        actions.push(action);
+        this.setState({actions: actions})
     }
     
     render() {
@@ -51,7 +58,7 @@ export default class App extends React.Component {
                 <ScrollView keyboardShouldPersistTaps='always' style={styles.content}>
                     <Entete />
                     <Saisie texteSaisie={this.state.texteSaisie} evtTexteModifie={(titre) => this.quandLaSaisieChange(titre)}/>
-                    <ListeActions actions={this.state.actions} supprimerFonction={this.supprimerAction}/>
+                    <ListeActions actions={this.state.actions} supprimerFonction={this.supprimerAction} majEtatFonction={this.majEtatAction}/>
                     <BoutonCreer onValider={() => this.validerNouvelleAction()}/>
                 </ScrollView>
                 <Menu/>

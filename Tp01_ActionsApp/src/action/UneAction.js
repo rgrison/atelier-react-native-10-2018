@@ -7,14 +7,14 @@ import BoutonAction from './BoutonAction'
  *
  * TODO modifier le code pour afficher le titre de l'action et les boutons associés.
  */
-const UneAction = ({titre, supprimerAction}) => (
+const UneAction = ({action, supprimerAction, majEtat}) => (
     <View style={styles.conteneurUneAction}>
         <Text style={styles.texteUneAction}>
-            { titre }
+            { action.titre }
         </Text>
         <View style={styles.boutons}>
-            <BoutonAction nom="Terminer"  action={() => console.log('appuyé sur Terminer') } />
-            <BoutonAction nom="Supprimer" action={() => supprimerAction(titre) } />
+            <BoutonAction nom="Terminer"  action={action} onPress={() => majEtat(action) } />
+            <BoutonAction nom="Supprimer" action={action} onPress={() => supprimerAction(action.titre) } />
         </View>
     </View>
 )
