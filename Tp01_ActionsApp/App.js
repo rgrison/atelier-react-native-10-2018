@@ -36,6 +36,8 @@ export default class App extends React.Component {
         let actions = this.state.actions;
         actions.push({titre: this.state.texteSaisie, done: false});
         this.setState({actions: actions, texteSaisie: ""});
+
+        this.raffraichirAffichage();
     }
 
     supprimerAction = (titre) => {
@@ -48,7 +50,33 @@ export default class App extends React.Component {
         action.done = !action.done;
         let actions = this.state.actions.filter(action => action.titre != action.titre);
         actions.push(action);
-        this.setState({actions: actions})
+        this.setState({actions: actions});
+
+        // this.raffraichirAffichage();
+    }
+
+    raffraichirAffichage() {
+        // on réapplique le filtre s'il existe après l'ajout d'une action
+        if (this.state.filtre) {
+            this.filtrerActions(this.state.filtre);
+        } else {
+            this.montrerToutesActions();
+        }
+    }
+
+    filtrerActions = (done) => {
+        let actions = this.state.sauvegardeActions ? this.state.sauvegardeActions : this.state.actions;
+        let sauvegardeActions = actions;
+        let actionsFiltrees = actions.filter(action => action.done == done);
+        this.setState({actions: actionsFiltrees, sauvegardeActions: sauvegardeActions, filtre: done});
+    }
+
+    montrerToutesActions = () => {
+        let state = this.state;
+        state.actions = state.sauvegardeActions ? state.sauvegardeActions : state.actions;
+        delete state.sauvegardeActions;
+        delete state.filtre;
+        this.setState(state);
     }
     
     render() {
@@ -61,7 +89,8 @@ export default class App extends React.Component {
                     <ListeActions actions={this.state.actions} supprimerFonction={this.supprimerAction} majEtatFonction={this.majEtatAction}/>
                     <BoutonCreer onValider={() => this.validerNouvelleAction()}/>
                 </ScrollView>
-                <Menu/>
+
+                <Menu filtrer={this.filtrerActions} montrerToutesActions={this.montrerToutesActions} />
             </View>
         )
     }
